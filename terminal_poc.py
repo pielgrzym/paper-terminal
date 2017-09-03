@@ -87,7 +87,11 @@ class PaperTerminal(object):
 
         self.slave_process = subprocess.Popen(shell=False, args=['/bin/bash', '-i'], stdin=self.slave,
                 stdout=self.slave, stderr=subprocess.STDOUT, preexec_fn=prepare_subprocess,
-                env=dict(TERM="linux", COLUMNS=str(self.size_x), LINES=str(self.size_y)))
+                env=dict(TERM="linux",
+                    COLUMNS=str(self.size_x),
+                    LINES=str(self.size_y),
+                    PS1="#> "
+                    ))
 
     def refresh_screen(self):
         """
