@@ -130,9 +130,9 @@ if __name__ == "__main__":
     paper_term = PaperTerminal(42, 7)
     paper_term.start_screen_loop()
     while True:
-        r = raw_input("#> ")
+        r = paper_term.getchr()
         if paper_term.KILLALL == True:
             break
-        paper_term.write(r+"\n")
+        paper_term.write(r)
 
     paper_term.stop_screen_loop()
