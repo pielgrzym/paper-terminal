@@ -23,7 +23,7 @@ def prepare_subprocess():
 
 
 class PaperTerminal(object):
-    def __init__(size_x, size_y):
+    def __init__(self, size_x, size_y):
         self.bus = 0
         self.device = 0
         self.xDot = 128
