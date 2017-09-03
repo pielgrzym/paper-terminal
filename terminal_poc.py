@@ -9,6 +9,10 @@ import pyte
 import subprocess
 
 def prepare_subprocess():
+    """
+    taken from: https://stackoverflow.com/questions/12146230/
+        how-to-run-a-shell-in-a-separate-process-and-get-auto-completions-python
+    """
     os.setsid() # start a new detached session
     tty.setcbreak(sys.stdin) # set standard input to cbreak mode
     old = termios.tcgetattr(sys.stdin)
@@ -70,6 +74,9 @@ class PaperTerminal(object):
     def _start_shell(self):
         """
         Start subprocess with a shell and nonblocking io for communication
+        taken from:
+        https://stackoverflow.com/questions/12146230/
+        how-to-run-a-shell-in-a-separate-process-and-get-auto-completions-python
         """
         self.slave_io, self.slave = pty.openpty()
         self.slave_io = os.fdopen(self.slave_io, 'rb+wb', 0) # open file in an unbuffered mode
@@ -87,11 +94,14 @@ class PaperTerminal(object):
         self.stream.feed(output)
         self.print_lines(self.screen.display)
 
+    def write(self, input_string):
+        self.slave_io.write(input_string)
+
 
 if __name__ == "__main__":
 
     paper_term = PaperTerminal(42, 7)
-    paper_term.slave_io.write("tail -f /var/log/syslog\n")
+    paper_term.write("tail -f /var/log/syslog\n")
     #master.write("ls\n")
     #slave_io.write("top\n")
 
