@@ -131,7 +131,7 @@ if __name__ == "__main__":
     paper_term.start_screen_loop()
     while True:
         r = raw_input("#> ")
-        if papter_term.KILLALL == True:
+        if paper_term.KILLALL == True:
             break
         paper_term.write(r+"\n")
 
