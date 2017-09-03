@@ -8,6 +8,7 @@ import datetime
 import pyte
 import subprocess
 import threading
+import signal
 
 def prepare_subprocess():
     """
@@ -104,7 +105,8 @@ class PaperTerminal(object):
             try:
                 self.refresh_screen()
             except Exception, e:
-                print(str(e))
+                #print(str(e))
+                pass
             time.sleep(self.DELAYTIME)
 
     def start_screen_loop(self):
@@ -117,19 +119,20 @@ class PaperTerminal(object):
     def write(self, input_string):
         self.slave_io.write(input_string)
 
+def signal_handler(signal, frame):
+    PaperTerminal.KILLALL = True
+    sys.exit(0)
 
 if __name__ == "__main__":
+
+    signal.signal(signal.SIGINT, signal_handler)
 
     paper_term = PaperTerminal(42, 7)
     paper_term.start_screen_loop()
     while True:
         r = raw_input("#> ")
-        if r.rstrip() == 'quit':
+        if papter_term.KILLALL == True:
             break
         paper_term.write(r+"\n")
 
     paper_term.stop_screen_loop()
-    # paper_term.write("tail -f /var/log/syslog\n")
-    #master.write("ls\n")
-    #slave_io.write("top\n")
-
