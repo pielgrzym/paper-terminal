@@ -99,7 +99,7 @@ if __name__ == "__main__":
             env=dict(TERM="linux", COLUMNS="42", LINES="7"))
 
     master.write("\n")
-    #master.write("tail -f /var/log/syslog\n")
+    master.write("tail -f /var/log/syslog\n")
     #master.write("ls\n")
     #master.write("top\n")
 
