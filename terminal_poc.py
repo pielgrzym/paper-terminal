@@ -85,7 +85,7 @@ class PaperTerminal(object):
         """
         output = self.slave_io.read()
         self.stream.feed(output)
-        self.print_lines(output)
+        self.print_lines(self.screen.display)
 
 
 if __name__ == "__main__":
