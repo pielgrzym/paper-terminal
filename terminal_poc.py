@@ -72,7 +72,7 @@ class PaperTerminal(object):
         Start subprocess with a shell and nonblocking io for communication
         """
         self.slave_io, self.slave = pty.openpty()
-        self.slave_io = os.fdopen(slave_io, 'rb+wb', 0) # open file in an unbuffered mode
+        self.slave_io = os.fdopen(self.slave_io, 'rb+wb', 0) # open file in an unbuffered mode
         self._make_non_blocking(self.slave_io)
 
         self.slave_process = subprocess.Popen(shell=False, args=['/bin/bash', '-i'], stdin=slave,
