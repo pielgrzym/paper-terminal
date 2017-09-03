@@ -116,7 +116,7 @@ if __name__ == "__main__":
     paper_term = PaperTerminal(42, 7)
     paper_term.start_screen_loop()
     while True:
-        r = input("#> ")
+        r = raw_input("#> ")
         if r.rstrip() == 'quit':
             break
         paper_term.write(r)
