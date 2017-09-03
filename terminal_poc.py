@@ -57,7 +57,7 @@ class PaperTerminal(object):
         """
         y_pos = 10
         for l in input_list:
-            disp.Dis_String(20, y_pos, l[:42], 12)
+            self.disp.Dis_String(20, y_pos, l[:42], 12)
             y_pos += 16
 
     def _make_non_blocking(self, fdescr):
@@ -77,7 +77,7 @@ class PaperTerminal(object):
 
         self.slave_process = subprocess.Popen(shell=False, args=['/bin/bash', '-i'], stdin=self.slave,
                 stdout=self.slave, stderr=subprocess.STDOUT, preexec_fn=prepare_subprocess,
-                env=dict(TERM="linux", COLUMNS=self.size_x, LINES=self.size_y))
+                env=dict(TERM="linux", COLUMNS=str(self.size_x), LINES=str(self.size_y)))
 
     def refresh_screen(self):
         """
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     time.sleep(1)
     while True:
         try:
-            papter_term.refresh_screen()
+            paper_term.refresh_screen()
         except Exception, e:
             print(str(e))
         time.sleep(1.5)
