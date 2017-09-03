@@ -126,7 +126,7 @@ if __name__ == "__main__":
         r = raw_input("#> ")
         if r.rstrip() == 'quit':
             break
-        paper_term.write(r)
+        paper_term.write(r+"\n")
 
     paper_term.stop_screen_loop()
     # paper_term.write("tail -f /var/log/syslog\n")
