@@ -32,7 +32,7 @@ class PaperTerminal(object):
         self.size_x = size_x
         self.size_y = size_y
 
-        self.disp = EPD_driver.EPD_driver(spi=SPI.SpiDev(bus, device))
+        self.disp = EPD_driver.EPD_driver(spi=SPI.SpiDev(self.bus, self.device))
         self.disp.Dis_Clear_full()
         self.disp.Dis_Clear_part()
 
