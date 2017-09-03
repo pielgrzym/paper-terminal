@@ -110,11 +110,6 @@ if __name__ == "__main__":
     time.sleep(1)
     while True:
         try:
-            c = sys.stdin.read(1)
-            #print "Got character", repr(c)
-            master.write(c)
-        except IOError: pass
-        try:
             output = master.read()
             stream.feed(output)
             print_line(screen.display)
