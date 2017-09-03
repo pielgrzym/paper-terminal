@@ -75,8 +75,8 @@ class PaperTerminal(object):
         self.slave_io = os.fdopen(self.slave_io, 'rb+wb', 0) # open file in an unbuffered mode
         self._make_non_blocking(self.slave_io)
 
-        self.slave_process = subprocess.Popen(shell=False, args=['/bin/bash', '-i'], stdin=slave,
-                stdout=slave, stderr=subprocess.STDOUT, preexec_fn=prepare_subprocess,
+        self.slave_process = subprocess.Popen(shell=False, args=['/bin/bash', '-i'], stdin=self.slave,
+                stdout=self.slave, stderr=subprocess.STDOUT, preexec_fn=prepare_subprocess,
                 env=dict(TERM="linux", COLUMNS=self.size_x, LINES=self.size_y))
 
     def refresh_screen(self):
