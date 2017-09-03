@@ -28,6 +28,7 @@ def prepare_subprocess():
 
 
 class PaperTerminal(object):
+    self.KILLALL = False
     def __init__(self, size_x, size_y):
         self.bus = 0
         self.device = 0
@@ -97,6 +98,9 @@ class PaperTerminal(object):
 
     def screen_loop(self):
         while True:
+            if self.KILLALL == True:
+                break
+                sys.exit(0)
             try:
                 self.refresh_screen()
             except Exception, e:
@@ -106,6 +110,9 @@ class PaperTerminal(object):
     def start_screen_loop(self):
         self.screen_loop_thread = threading.Thread(target=self.screen_loop)
         self.screen_loop_thread.start()
+
+    def stop_screen_loop(self):
+        self.KILLALL = True
 
     def write(self, input_string):
         self.slave_io.write(input_string)
@@ -121,6 +128,7 @@ if __name__ == "__main__":
             break
         paper_term.write(r)
 
+    paper_term.stop_screen_loop()
     # paper_term.write("tail -f /var/log/syslog\n")
     #master.write("ls\n")
     #slave_io.write("top\n")
