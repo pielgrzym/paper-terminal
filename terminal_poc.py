@@ -7,6 +7,7 @@ import EPD_driver
 import datetime
 import pyte
 import subprocess
+import threading
 
 def prepare_subprocess():
     """
@@ -94,6 +95,18 @@ class PaperTerminal(object):
         self.stream.feed(output)
         self.print_lines(self.screen.display)
 
+    def screen_loop(self):
+        while True:
+            try:
+                self.refresh_screen()
+            except Exception, e:
+                print(str(e))
+            time.sleep(self.DELAYTIME)
+
+    def start_screen_loop(self):
+        self.screen_loop_thread = threading.Thread(target=self.screen_loop)
+        self.screen_loop_thread.start()
+
     def write(self, input_string):
         self.slave_io.write(input_string)
 
@@ -101,14 +114,14 @@ class PaperTerminal(object):
 if __name__ == "__main__":
 
     paper_term = PaperTerminal(42, 7)
-    paper_term.write("tail -f /var/log/syslog\n")
+    paper_term.start_screen_loop()
+    while True:
+        r = input("#> ")
+        if r.rstrip() == 'quit':
+            break
+        paper_term.write(r)
+
+    # paper_term.write("tail -f /var/log/syslog\n")
     #master.write("ls\n")
     #slave_io.write("top\n")
 
-    time.sleep(1)
-    while True:
-        try:
-            paper_term.refresh_screen()
-        except Exception, e:
-            print(str(e))
-        time.sleep(1.5)
