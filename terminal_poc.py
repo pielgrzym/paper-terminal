@@ -112,7 +112,7 @@ class PaperTerminal(object):
             except Exception, e:
                 #print(str(e))
                 pass
-            #time.sleep(self.DELAYTIME)
+            time.sleep(0.1) # omg, some callback or shit?
 
     def start_screen_loop(self):
         self.screen_loop_thread = threading.Thread(target=self.screen_loop)
