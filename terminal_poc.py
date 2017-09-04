@@ -38,6 +38,8 @@ def prepare_subprocess(username):
 class PaperTerminal(object):
     KILLALL = False
     def __init__(self, size_x, size_y):
+        self.user = None
+
         self.bus = 0
         self.device = 0
         self.xDot = 128
