@@ -55,8 +55,6 @@ class PaperTerminal(object):
         self.screen = pyte.Screen(self.size_x, self.size_y)
         self.stream = pyte.Stream(self.screen)
 
-        self._start_shell()
-
     def getchr(self):
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
@@ -119,6 +117,7 @@ class PaperTerminal(object):
             #time.sleep(self.DELAYTIME)
 
     def start_screen_loop(self):
+        self._start_shell()
         self.screen_loop_thread = threading.Thread(target=self.screen_loop)
         self.screen_loop_thread.start()
 
