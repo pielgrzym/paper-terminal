@@ -38,8 +38,6 @@ def prepare_subprocess(username):
 class PaperTerminal(object):
     KILLALL = False
     def __init__(self, size_x, size_y):
-        self.user = None
-
         self.bus = 0
         self.device = 0
         self.xDot = 128
@@ -81,7 +79,7 @@ class PaperTerminal(object):
         except AttributeError:
             fcntl.fcntl(fdescr, fcntl.F_SETFL, fdfl | os.FNDELAY)
 
-    def _start_shell(self):
+    def start_shell(self, user):
         """
         Start subprocess with a shell and nonblocking io for communication
         taken from:
@@ -93,7 +91,7 @@ class PaperTerminal(object):
         self._make_non_blocking(self.slave_io)
 
         self.slave_process = subprocess.Popen(shell=False, args=['/bin/bash', '-i'], stdin=self.slave,
-                stdout=self.slave, stderr=subprocess.STDOUT, preexec_fn=prepare_subprocess(self.user),
+                stdout=self.slave, stderr=subprocess.STDOUT, preexec_fn=prepare_subprocess(user),
                 env=dict(TERM="linux", COLUMNS=str(self.size_x), LINES=str(self.size_y)))
 
     def refresh_screen(self):
@@ -117,7 +115,6 @@ class PaperTerminal(object):
             #time.sleep(self.DELAYTIME)
 
     def start_screen_loop(self):
-        self._start_shell()
         self.screen_loop_thread = threading.Thread(target=self.screen_loop)
         self.screen_loop_thread.start()
 
@@ -140,24 +137,22 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
 
     paper_term = PaperTerminal(42, 7)
+    paper_term.start_screen_loop()
+
     while True:
-        paper_term.stream.feed("Username:")
-        paper_term.print_lines(paper_term.screen.display)
+        paper_term.write("Username:\n")
         username = raw_input()
-        paper_term.stream.feed("Password:")
-        paper_term.print_lines(paper_term.screen.display)
-        password = getpass()
+        paper_term.write("Password:\n")
+        os.system("stty -echo")
+        password = raw_input()
+        os.system("stty echo")
         if pam.authenticate(username, password):
-            paper_term.user = username
+            paper_term.start_shell(username)
             break
         else:
             paper_term.stream.feed("Wrong user/pass")
             paper_term.print_lines(paper_term.screen.display)
 
-    if paper_term.user is None:
-        sys.exit(1)
-
-    paper_term.start_screen_loop()
     while True:
         r = paper_term.getchr()
         if paper_term.KILLALL == True:
