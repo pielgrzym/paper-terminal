@@ -145,11 +145,10 @@ if __name__ == "__main__":
 
     while True:
         paper_term.echo("Username:\n")
+        print("Username: ")
         username = raw_input()
         paper_term.echo("Password:\n")
-        os.system("stty -echo")
-        password = raw_input()
-        os.system("stty echo")
+        password = getpass()
         if pam.authenticate(username, password):
             paper_term.start_shell(username)
             break
