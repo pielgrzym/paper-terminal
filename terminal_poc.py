@@ -9,12 +9,18 @@ import pyte
 import subprocess
 import threading
 import signal
+import pam
+import pwd
+from getpass import getpass
 
-def prepare_subprocess():
+def prepare_subprocess(username):
     """
     taken from: https://stackoverflow.com/questions/12146230/
         how-to-run-a-shell-in-a-separate-process-and-get-auto-completions-python
     """
+    pw_record = pwd.getpwnam(username)
+    os.setgid(pw_record.pw_gid)
+    os.setuid(pw_record.pw_uid)
     os.setsid() # start a new detached session
     tty.setcbreak(sys.stdin) # set standard input to cbreak mode
     old = termios.tcgetattr(sys.stdin)
@@ -86,7 +92,7 @@ class PaperTerminal(object):
         self._make_non_blocking(self.slave_io)
 
         self.slave_process = subprocess.Popen(shell=False, args=['/bin/bash', '-i'], stdin=self.slave,
-                stdout=self.slave, stderr=subprocess.STDOUT, preexec_fn=prepare_subprocess,
+                stdout=self.slave, stderr=subprocess.STDOUT, preexec_fn=prepare_subprocess(self.user),
                 env=dict(TERM="linux", COLUMNS=str(self.size_x), LINES=str(self.size_y)))
 
     def refresh_screen(self):
@@ -128,6 +134,23 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
 
     paper_term = PaperTerminal(42, 7)
+    while True:
+        paper_term.stream.feed("Username:")
+        paper_term.print_lines(paper_term.screen.display)
+        username = raw_input()
+        paper_term.stream.feed("Password:")
+        paper_term.print_lines(paper_term.screen.display)
+        password = getpass()
+        if pam.authenticate(username, password):
+            paper_term.user = username
+            break
+        else:
+            paper_term.stream.feed("Wrong user/pass")
+            paper_term.print_lines(paper_term.screen.display)
+
+    if paper_term.user is None:
+        sys.exit(1)
+
     paper_term.start_screen_loop()
     while True:
         r = paper_term.getchr()
