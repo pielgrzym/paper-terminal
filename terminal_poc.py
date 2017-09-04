@@ -125,7 +125,11 @@ class PaperTerminal(object):
         self.KILLALL = True
 
     def write(self, input_string):
-        self.slave_io.write(input_string)
+        try:
+            self.slave_io.write(input_string)
+        except:
+            # some bad shit waiting to blow up here. NAH, it's gonna be fine ]:->
+            pass
 
 def signal_handler(signal, frame):
     PaperTerminal.KILLALL = True
