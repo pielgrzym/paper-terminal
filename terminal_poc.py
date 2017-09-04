@@ -128,6 +128,10 @@ class PaperTerminal(object):
             # some bad shit waiting to blow up here. NAH, it's gonna be fine ]:->
             pass
 
+    def echo(self, output):
+        self.stream.feed(output)
+        self.print_lines(self.screen.display)
+
 def signal_handler(signal, frame):
     PaperTerminal.KILLALL = True
     sys.exit(0)
@@ -140,9 +144,9 @@ if __name__ == "__main__":
     paper_term.start_screen_loop()
 
     while True:
-        paper_term.write("Username:\n")
+        paper_term.echo("Username:\n")
         username = raw_input()
-        paper_term.write("Password:\n")
+        paper_term.echo("Password:\n")
         os.system("stty -echo")
         password = raw_input()
         os.system("stty echo")
@@ -150,8 +154,7 @@ if __name__ == "__main__":
             paper_term.start_shell(username)
             break
         else:
-            paper_term.stream.feed("Wrong user/pass")
-            paper_term.print_lines(paper_term.screen.display)
+            paper_term.echo("Wrong user/pass")
 
     while True:
         r = paper_term.getchr()
