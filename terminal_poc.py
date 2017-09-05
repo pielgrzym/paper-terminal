@@ -147,16 +147,17 @@ if __name__ == "__main__":
     paper_term.start_screen_loop()
 
     while True:
-        paper_term.echo("Username:\n")
+        paper_term.echo("Username:\n\r")
         print("Username: ")
         username = raw_input()
-        paper_term.echo("Password:\n")
-        password = getpass()
+        paper_term.echo("Password:\n\r")
+        password = raw_input() # TODO: rnd how to prevent getpass delay
+        # password = getpass()
         if pam.authenticate(username, password):
             paper_term.start_shell(username)
             break
         else:
-            paper_term.echo("Wrong user/pass")
+            paper_term.echo("Wrong user/pass\n\r")
 
     while True:
         r = paper_term.getchr()
