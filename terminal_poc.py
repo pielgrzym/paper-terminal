@@ -22,7 +22,10 @@ def prepare_subprocess(username):
     pw_record = pwd.getpwnam(username)
     os.setgid(pw_record.pw_gid)
     os.setuid(pw_record.pw_uid)
-    os.setsid() # start a new detached session
+    try:
+        os.setsid() # start a new detached session
+    except:
+        print("Warning setsid() failed")
     tty.setcbreak(sys.stdin) # set standard input to cbreak mode
     old = termios.tcgetattr(sys.stdin)
     old[0] |= termios.BRKINT # transforms break to SIGINT
