@@ -152,7 +152,7 @@ if __name__ == "__main__":
         username = ""
         while True:
             c = paper_term.getchr()
-            paper_term.write(c)
+            paper_term.echo(c)
             if c == "\r":
                 paper_term.echo("\n\r")
                 break
