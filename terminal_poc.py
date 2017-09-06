@@ -41,6 +41,7 @@ def prepare_subprocess(username):
 class PaperTerminal(object):
     KILLALL = False
     stream = None
+    screen = None
     def __init__(self, size_x, size_y):
         self.bus = 0
         self.device = 0
