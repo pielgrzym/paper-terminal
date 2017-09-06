@@ -150,12 +150,14 @@ if __name__ == "__main__":
         paper_term.echo("Username: ")
         print("Username: ")
         username = ""
-        while c = paper_term.getchr():
+        while True:
+            c = paper_term.getchr()
             paper_term.write(c)
-            username += c
             if c == "\n":
                 paper_term.echo("\n\r")
                 break
+            else:
+                username += c
         paper_term.echo("Password:\n\r")
         password = raw_input() # TODO: rnd how to prevent getpass delay
         # password = getpass()
