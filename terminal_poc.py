@@ -133,7 +133,8 @@ class PaperTerminal(object):
 
     def echo(self, output):
         self.stream.feed(output)
-        self.print_lines(self.screen.display)
+        t = threading.Thread(target=self.print_lines(self.screen.display))
+        t.start()
 
 def signal_handler(signal, frame):
     PaperTerminal.KILLALL = True
