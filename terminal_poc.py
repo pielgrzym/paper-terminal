@@ -153,7 +153,7 @@ if __name__ == "__main__":
         while True:
             c = paper_term.getchr()
             paper_term.write(c)
-            if c == "\n":
+            if c == "\r":
                 paper_term.echo("\n\r")
                 break
             else:
