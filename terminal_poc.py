@@ -40,6 +40,7 @@ def prepare_subprocess(username):
 
 class PaperTerminal(object):
     KILLALL = False
+    stream = None
     def __init__(self, size_x, size_y):
         self.bus = 0
         self.device = 0
@@ -101,8 +102,9 @@ class PaperTerminal(object):
         """
         Read from subprocess and display content to screen
         """
-        output = self.slave_io.read()
-        self.stream.feed(output)
+        if self.slave_io:
+            output = self.slave_io.read()
+            self.stream.feed(output)
         self.print_lines(self.screen.display)
 
     def screen_loop(self):
@@ -133,8 +135,6 @@ class PaperTerminal(object):
 
     def echo(self, output):
         self.stream.feed(output)
-        t = threading.Thread(target=self.print_lines(self.screen.display))
-        t.start()
 
 def signal_handler(signal, frame):
     PaperTerminal.KILLALL = True
