@@ -60,6 +60,7 @@ class ShellThread(threading.Thread):
         self.slave_process = ptyprocess.PtyProcessUnicode.spawn(['/bin/bash','-i'],
                 preexec_fn=prepare_subprocess(uid, gid),
                 dimensions=(self.size_y, self.size_x),
+                cwd=pw_record.pw_dir,
                 env=dict(TERM="linux",
                     HOME=pw_record.pw_dir,
                     LOGNAME=pw_record.pw_name,
