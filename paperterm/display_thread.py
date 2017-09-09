@@ -41,6 +41,8 @@ class DisplayThread(threading.Thread):
     def redraw_image(self):
         self.epd.set_frame_memory(self.image.rotate(90, expand=1), 0, 0)
         self.epd.display_frame()
+        self.epd.set_frame_memory(self.image.rotate(90, expand=1), 0, 0)
+        self.epd.display_frame()
 
     def check_prompt(self, input_list):
         new_lines = set(input_list) - set(self.buffer)
@@ -56,13 +58,21 @@ class DisplayThread(threading.Thread):
         only_prompt_modfied = self.check_prompt(input_list)
         if only_prompt_modfied:
             lh = self.line_height
-            self.draw.rectangle((0, lh*only_prompt_modfied, lh, epd2in9.EPD_HEIGHT), fill = 255)
-            self.draw.text((0, lh*only_prompt_modfied), input_list[only_prompt_modfied], font=self.font)
+            area = Image.new('1', (lh, epd2in9.EPD_WIDTH-20), 255)
+            #area = Image.new('1', (lh, epd2in9.EPD_WIDTH), 255)
+            area_draw = ImageDraw.Draw(area)
+            #self.draw.rectangle((0, lh*only_prompt_modfied, lh, epd2in9.EPD_HEIGHT), fill = 255)
+            w, h = area.size
+            #area_draw.rectangle((0, 0, w, h), fill = 255)
+            area_draw.text((0, 0), input_list[only_prompt_modfied], font=self.font, fill=0)
+            rotated_area = area.rotate(90, expand=1)
+            self.epd.set_frame_memory(rotated_area, lh*only_prompt_modfied, 0)
+            self.epd.display_frame()
         else:
             self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
             self.draw = ImageDraw.Draw(self.image)
             self.draw.multiline_text((0, 0), "\n".join(input_list), font=self.font)
-        self.redraw_image()
+            self.redraw_image()
         self.buffer = input_list
 
     def refresh_screen(self):
