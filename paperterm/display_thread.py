@@ -58,12 +58,9 @@ class DisplayThread(threading.Thread):
         only_prompt_modfied = self.check_prompt(input_list)
         if only_prompt_modfied:
             lh = self.line_height
-            area = Image.new('1', (lh, epd2in9.EPD_WIDTH-20), 255)
-            #area = Image.new('1', (lh, epd2in9.EPD_WIDTH), 255)
+            area = Image.new('1', (epd2in9.EPD_HEIGHT, lh), 255)
             area_draw = ImageDraw.Draw(area)
-            #self.draw.rectangle((0, lh*only_prompt_modfied, lh, epd2in9.EPD_HEIGHT), fill = 255)
             w, h = area.size
-            #area_draw.rectangle((0, 0, w, h), fill = 255)
             area_draw.text((0, 0), input_list[only_prompt_modfied], font=self.font, fill=0)
             rotated_area = area.rotate(90, expand=1)
             self.epd.set_frame_memory(rotated_area, lh*only_prompt_modfied, 0)
