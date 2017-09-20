@@ -47,7 +47,7 @@ class DisplayThread(threading.Thread):
         y_pos = 10
         self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
         self.draw = ImageDraw.Draw(self.image)
-        self.draw.multiline_text((0, 0), "\n".join(input_list))
+        self.draw.multiline_text((0, 0), "\n".join(input_list), font=self.font)
         self.redraw_image()
         # for l in input_list:
         #     self.draw.text((0, y_pos), l[:42], font=font, fill=0)
