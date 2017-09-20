@@ -8,6 +8,8 @@ from paperterm import *
 # def signal_handler(signal, frame):
 #     PaperTerminal.KILLALL = True
 #     sys.exit(0)
+TERM_WIDTH=49
+TERM_HEIGHT=8
 
 def getchr():
     fd = sys.stdin.fileno()
@@ -24,7 +26,7 @@ if __name__ == "__main__":
     # signal.signal(signal.SIGINT, signal_handler)
 
     display_q = Queue.Queue()
-    display_thread = DisplayThread(42, 7, display_q)
+    display_thread = DisplayThread(TERM_WIDTH, TERM_HEIGHT, display_q)
     display_thread.start()
     shell_thread = None
 
@@ -49,7 +51,7 @@ if __name__ == "__main__":
         # password = raw_input() # TODO: rnd how to prevent getpass delay
         password = getpass("Password: ")
         if pam.authenticate(username, password):
-            shell_thread = ShellThread(42, 7, username, display_q)
+            shell_thread = ShellThread(TERM_WIDTH, TERM_HEIGHT, username, display_q)
             shell_thread.start()
             break
         else:
