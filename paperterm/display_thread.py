@@ -31,6 +31,7 @@ class DisplayThread(threading.Thread):
 
         self.screen = pyte.Screen(self.size_x, self.size_y)
         self.stream = pyte.Stream(self.screen)
+        self.buffer = []
 
     def clear_display(self):
         self.epd.clear_frame_memory(0xFF)
@@ -40,15 +41,27 @@ class DisplayThread(threading.Thread):
         self.epd.set_frame_memory(self.image.rotate(90, expand=1), 0, 0)
         self.epd.display_frame()
 
+    def check_prompt(self, input_list):
+        new_lines = set(input_list) - set(self.buffer)
+        if len(new_lines) == 1:
+            return input_list.index(new_lines.pop())
+        else:
+            return False
+
     def print_lines(self, input_list):
         """
         Print list line-by-line
         """
-        y_pos = 10
-        self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
-        self.draw = ImageDraw.Draw(self.image)
-        self.draw.multiline_text((0, 0), "\n".join(input_list), font=self.font)
+        only_prompt_modfied = self.check_prompt(input_list)
+        if only_prompt_modfied:
+            self.draw.rectangle((0, 12*only_prompt_modfied, epd2in9.EPD_HEIGHT, 12), fill = 255)
+            self.draw.text((0, 12*only_prompt_modfied,), input_list[only_prompt_modfied], font=self.font)
+        else:
+            self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
+            self.draw = ImageDraw.Draw(self.image)
+            self.draw.multiline_text((0, 0), "\n".join(input_list), font=self.font)
         self.redraw_image()
+        self.buffer = input_list
         # for l in input_list:
         #     self.draw.text((0, y_pos), l[:42], font=font, fill=0)
             # self.disp.Dis_String(20, y_pos, l[:42], 12)
