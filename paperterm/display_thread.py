@@ -23,7 +23,7 @@ class DisplayThread(threading.Thread):
         self.epd = epd2in9.EPD()
         self.epd.init(self.epd.lut_full_update)
         self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
-        self.font = ImageFont.truetype('djavu.ttf', 10)
+        self.font = ImageFont.truetype('terminus.ttf', 12)
         self.draw = ImageDraw.Draw(self.image)
         self.clear_display()
         self.epd.init(self.epd.lut_partial_update)
