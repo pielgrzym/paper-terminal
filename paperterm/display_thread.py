@@ -22,6 +22,7 @@ class DisplayThread(threading.Thread):
         self.stoprequest = threading.Event()
 
         self.epd = epd2in9.EPD()
+        self.epd.init(epd.lut_full_update)
         self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
         self.font = ImageFont.truetype('djavu.ttf', 10)
         self.draw = ImageDraw(self.image)
