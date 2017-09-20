@@ -58,12 +58,15 @@ class DisplayThread(threading.Thread):
         """
         Read from queue and display content to screen
         """
+        new_data = False
         try:
             while True:
                 output = self.display_q.get(False)
+                new_data = True
                 self.stream.feed(output)
         except Queue.Empty:
-            self.print_lines(self.screen.display)
+            if new_data:
+                self.print_lines(self.screen.display)
 
     def run(self):
         while not self.stoprequest.isSet():
