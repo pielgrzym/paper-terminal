@@ -13,9 +13,8 @@ class DisplayThread(threading.Thread):
         self.display_q = display_q
         self.bus = 0
         self.device = 0
-        self.xDot = 128
-        self.yDot = 296
-        self.DELAYTIME = 1.5
+        self.x_max = 128
+        self.y_max = 296
         self.size_x = size_x
         self.size_y = size_y
 
@@ -27,6 +26,7 @@ class DisplayThread(threading.Thread):
         self.font = ImageFont.truetype('djavu.ttf', 10)
         self.draw = ImageDraw.Draw(self.image)
         self.clear_display()
+        self.epd.init(self.epd.lut_partial_update)
         # self.disp.Dis_Clear_full()
         # self.disp.Dis_Clear_part()
 
