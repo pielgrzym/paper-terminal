@@ -24,6 +24,7 @@ class DisplayThread(threading.Thread):
         self.epd.init(self.epd.lut_full_update)
         self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
         self.font = ImageFont.load('terminus_12.pil')
+        self.line_height = 16
         #self.font = ImageFont.truetype('terminus.ttf', 12)
         self.draw = ImageDraw.Draw(self.image)
         self.clear_display()
@@ -54,18 +55,15 @@ class DisplayThread(threading.Thread):
         """
         only_prompt_modfied = self.check_prompt(input_list)
         if only_prompt_modfied:
-            self.draw.rectangle((0, 12*only_prompt_modfied, epd2in9.EPD_HEIGHT, 12), fill = 255)
-            self.draw.text((0, 12*only_prompt_modfied,), input_list[only_prompt_modfied], font=self.font)
+            lh = self.line_height
+            self.draw.rectangle((0, lh*only_prompt_modfied, lh, epd2in9.EPD_HEIGHT), fill = 255)
+            self.draw.text((0, lh*only_prompt_modfied), input_list[only_prompt_modfied], font=self.font)
         else:
             self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
             self.draw = ImageDraw.Draw(self.image)
             self.draw.multiline_text((0, 0), "\n".join(input_list), font=self.font)
         self.redraw_image()
         self.buffer = input_list
-        # for l in input_list:
-        #     self.draw.text((0, y_pos), l[:42], font=font, fill=0)
-            # self.disp.Dis_String(20, y_pos, l[:42], 12)
-            # y_pos += 16
 
     def refresh_screen(self):
         """
@@ -88,7 +86,7 @@ class DisplayThread(threading.Thread):
             except Exception, e:
                 #print(str(e))
                 pass
-            time.sleep(0.1) # omg, some callback or shit?
+            time.sleep(0.05) # omg, some callback or shit?
         self.clear_display()
 
     def echo(self, output):
