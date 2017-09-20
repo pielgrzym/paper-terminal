@@ -23,17 +23,14 @@ class DisplayThread(threading.Thread):
         self.epd = epd2in9.EPD()
         self.epd.init(self.epd.lut_full_update)
         self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
-        self.font = ImageFont.truetype('terminus.ttf', 12)
+        self.font = ImageFont.load('terminus_12.pil')
+        #self.font = ImageFont.truetype('terminus.ttf', 12)
         self.draw = ImageDraw.Draw(self.image)
         self.clear_display()
         self.epd.init(self.epd.lut_partial_update)
-        # self.disp.Dis_Clear_full()
-        # self.disp.Dis_Clear_part()
 
         self.screen = pyte.Screen(self.size_x, self.size_y)
         self.stream = pyte.Stream(self.screen)
-
-        # self.screen_loop()
 
     def clear_display(self):
         self.epd.clear_frame_memory(0xFF)
