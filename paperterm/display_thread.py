@@ -26,8 +26,7 @@ class DisplayThread(threading.Thread):
         self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
         self.font = ImageFont.truetype('djavu.ttf', 10)
         self.draw = ImageDraw.Draw(self.image)
-        self.epd.clear_frame_memory(0xFF)
-        self.epd.display_frame()
+        self.clear_display()
         # self.disp.Dis_Clear_full()
         # self.disp.Dis_Clear_part()
 
@@ -35,6 +34,10 @@ class DisplayThread(threading.Thread):
         self.stream = pyte.Stream(self.screen)
 
         # self.screen_loop()
+
+    def clear_display(self):
+        self.epd.clear_frame_memory(0xFF)
+        self.epd.display_frame()
 
     def redraw_image(self):
         self.epd.set_frame_memory(self.image.rotate(90, expand=1), 0, 0)
@@ -76,7 +79,7 @@ class DisplayThread(threading.Thread):
                 #print(str(e))
                 pass
             time.sleep(0.1) # omg, some callback or shit?
-        #self.disp.Dis_Clear_full()
+        self.clear_display()
 
     def echo(self, output):
         self.stream.feed(output)
