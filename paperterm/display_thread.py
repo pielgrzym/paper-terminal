@@ -37,7 +37,7 @@ class DisplayThread(threading.Thread):
         # self.screen_loop()
 
     def redraw_image(self):
-        self.epd.set_frame_memory(image.rotate(90, expand=1), 0, 0)
+        self.epd.set_frame_memory(self.image.rotate(90, expand=1), 0, 0)
         self.epd.display_frame()
 
     def print_lines(self, input_list):
@@ -73,7 +73,7 @@ class DisplayThread(threading.Thread):
                 #print(str(e))
                 pass
             time.sleep(0.8) # omg, some callback or shit?
-        self.disp.Dis_Clear_full()
+        #self.disp.Dis_Clear_full()
 
     def echo(self, output):
         self.stream.feed(output)
