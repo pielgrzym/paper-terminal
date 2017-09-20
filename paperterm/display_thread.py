@@ -25,7 +25,7 @@ class DisplayThread(threading.Thread):
         self.epd.init(self.epd.lut_full_update)
         self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
         self.font = ImageFont.truetype('djavu.ttf', 10)
-        self.draw = ImageDraw(self.image)
+        self.draw = ImageDraw.Draw(self.image)
         self.epd.clear_frame_memory(0xFF)
         self.epd.display_frame()
         # self.disp.Dis_Clear_full()
@@ -46,7 +46,7 @@ class DisplayThread(threading.Thread):
         """
         y_pos = 10
         self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
-        self.draw = ImageDraw(self.image)
+        self.draw = ImageDraw.Draw(self.image)
         self.draw.multiline_text((0, 0), "\n".join(input_list))
         self.redraw_image()
         # for l in input_list:
