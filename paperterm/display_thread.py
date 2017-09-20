@@ -1,7 +1,9 @@
 from __future__ import print_function, unicode_literals
 import threading, Queue
-import spidev as SPI
-import EPD_driver
+# import spidev as SPI
+# import EPD_driver
+import epd2in9
+import Image, ImageDraw, ImageFont
 import pyte
 import time
 
@@ -19,23 +21,37 @@ class DisplayThread(threading.Thread):
 
         self.stoprequest = threading.Event()
 
-        self.disp = EPD_driver.EPD_driver(spi=SPI.SpiDev(self.bus, self.device))
-        self.disp.Dis_Clear_full()
-        self.disp.Dis_Clear_part()
+        self.epd = epd2in9.EPD()
+        self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
+        self.font = ImageFont.truetype('djavu.ttf', 10)
+        self.draw = ImageDraw(self.image)
+        self.epd.clear_frame_memory(0xFF)
+        self.epd.display_frame()
+        # self.disp.Dis_Clear_full()
+        # self.disp.Dis_Clear_part()
 
         self.screen = pyte.Screen(self.size_x, self.size_y)
         self.stream = pyte.Stream(self.screen)
 
         # self.screen_loop()
 
+    def redraw_image(self):
+        self.epd.set_frame_memory(image.rotate(90, expand=1), 0, 0)
+        self.epd.display_frame()
+
     def print_lines(self, input_list):
         """
         Print list line-by-line
         """
         y_pos = 10
-        for l in input_list:
-            self.disp.Dis_String(20, y_pos, l[:42], 12)
-            y_pos += 16
+        self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
+        self.draw = ImageDraw(self.image)
+        self.draw.multiline_text((0, 0), "\n".join(input_list))
+        self.redraw_image()
+        # for l in input_list:
+        #     self.draw.text((0, y_pos), l[:42], font=font, fill=0)
+            # self.disp.Dis_String(20, y_pos, l[:42], 12)
+            # y_pos += 16
 
     def refresh_screen(self):
         """
