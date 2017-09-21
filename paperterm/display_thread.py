@@ -65,6 +65,8 @@ class DisplayThread(threading.Thread):
             rotated_area = area.rotate(90, expand=1)
             self.epd.set_frame_memory(rotated_area, lh*only_prompt_modfied, 0)
             self.epd.display_frame()
+            self.epd.set_frame_memory(rotated_area, lh*only_prompt_modfied, 0)
+            self.epd.display_frame()
         else:
             self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
             self.draw = ImageDraw.Draw(self.image)
