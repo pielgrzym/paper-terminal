@@ -44,10 +44,16 @@ class DisplayThread(threading.Thread):
         self.epd.set_frame_memory(self.image.rotate(90, expand=1), 0, 0)
         self.epd.display_frame()
 
-    def check_prompt(self, input_list):
+    def check_single_line_modified(self, input_list):
         new_lines = set(input_list) - set(self.buffer)
         if len(new_lines) == 1:
             return input_list.index(new_lines.pop())
+        else:
+            return False
+
+    def check_prompt(self, line):
+        if 'pi@raspberrypi:' in line:
+            return True
         else:
             return False
 
@@ -55,17 +61,17 @@ class DisplayThread(threading.Thread):
         """
         Print list line-by-line
         """
-        only_prompt_modfied = self.check_prompt(input_list)
-        if only_prompt_modfied:
+        single_line_modified = self.check_single_line_modified(input_list)
+        if single_line_modified and self.check_prompt(input_list[single_line_modified]):
             lh = self.line_height
             area = Image.new('1', (epd2in9.EPD_HEIGHT, lh), 255)
             area_draw = ImageDraw.Draw(area)
             w, h = area.size
-            area_draw.text((0, 0), input_list[only_prompt_modfied], font=self.font, fill=0)
+            area_draw.text((0, 0), input_list[single_line_modified], font=self.font, fill=0)
             rotated_area = area.rotate(90, expand=1)
-            self.epd.set_frame_memory(rotated_area, lh*only_prompt_modfied, 0)
+            self.epd.set_frame_memory(rotated_area, lh*single_line_modified, 0)
             self.epd.display_frame()
-            self.epd.set_frame_memory(rotated_area, lh*only_prompt_modfied, 0)
+            self.epd.set_frame_memory(rotated_area, lh*single_line_modified, 0)
             self.epd.display_frame()
         else:
             self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
