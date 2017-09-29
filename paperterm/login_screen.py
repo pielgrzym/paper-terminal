@@ -27,12 +27,16 @@ class LoginScreen(object):
             self.username = ""
             while True:
                 c = self.getchr()
-                self.display_q.put(c)
                 if c == "\r":
                     self.display_q.put("\n\r")
                     break
+                elif ord(c) == 8: # backspace, delete one char
+                    self.username = self.username[:-1]
+                elif ord(c) in [13, 37, 38, 39, 40]: # delete or arrows
+                    continue
                 else:
                     self.username += c
+                self.display_q.put(c)
             self.display_q.put("Password:\n\r")
             self.password = getpass("Password: ")
             if pam.authenticate(self.username, self.password):
