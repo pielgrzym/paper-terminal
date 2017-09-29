@@ -47,5 +47,4 @@ class LoginScreen(object):
             else:
                 logging.debug("Auth FAIL for user: %s" % self.username)
                 self.authenticated = False
-                display_q.put("Wrong user/pass\n\r")
-
+                self.display_q.put("Wrong user/pass\n\r")
