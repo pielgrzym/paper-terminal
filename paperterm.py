@@ -48,7 +48,7 @@ def start():
     login_screen.run()
 
     if login_screen.authenticated:
-        shell_thread = ShellThread(TERM_WIDTH, TERM_HEIGHT, username, display_q)
+        shell_thread = ShellThread(TERM_WIDTH, TERM_HEIGHT, login_screen.username, display_q)
         shell_thread.start()
     else:
         sys.exit(0)
