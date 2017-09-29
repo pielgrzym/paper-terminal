@@ -39,13 +39,34 @@ class DisplayThread(threading.Thread):
         self.epd.clear_frame_memory(0xFF)
         self.epd.display_frame()
 
+    def draw_border(self, image):
+        data = image.load()
+        (width, height) = image.size
+
+        color = 0
+
+        for x in range(0, width):
+            data[x, 0] = color
+            data[x, height-1] = color
+        for y in range(0, height):
+            data[0, y] = color
+            data[width-1, y] = color
+
+    def round_up(self, base, number):
+        import math
+        return int(math.ceil(float(number)/float(base))*float(base))
+
+    def round_down(self, base, number):
+        import math
+        return int(math.floor(float(number)/float(base))*float(base))
+
     def redraw_image_part(self, old_r, new_r):
 
         logging.debug("Redrawing image part ...")
 
-        old = old_r.copy()
+        old = old_r.copy().convert('1')
         old = old.rotate(90, expand=1)
-        new = new_r.copy()
+        new = new_r.copy().convert('1')
         new = new.rotate(90, expand=1)
 
         i_old = old.load()
@@ -63,15 +84,16 @@ class DisplayThread(threading.Thread):
         for y in range(0, height):
             for x in range(0, width):
                 if i_old[x,y] != i_new[x,y]:
-                    if x < min_x: min_x = x
-                    if x > max_x: max_x = x
-                    if y < min_y: min_y = y
-                    if y > max_y: max_y = y
+                    if x < min_x: min_x = self.round_down(8, x)
+                    if x > max_x: max_x = self.round_up(8, x)
+                    if y < min_y: min_y = self.round_down(8, y)
+                    if y > max_y: max_y = self.round_up(8, y)
 
         logging.debug("Size: MIN_X=%d MAX_X=%d MIN_Y=%d MAX_Y=%d",
                       min_x, max_x, min_y, max_y)
 
         part = new.crop((min_x, min_y, max_x, max_y))
+        self.draw_border(part)
 
         return (part, min_x, min_y)
 
