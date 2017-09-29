@@ -8,7 +8,7 @@ import logging
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--no-loadkeys", help="Disable loadkeys being ran prior to shell")
+parser.add_argument("--no-loadkeys", help="Disable loadkeys being ran prior to shell", action="store_true")
 parser.add_argument("--loadkeys-config", help="Config file for key remapping", default='/home/pi/keys')
 parser.add_argument("--term-width", help="Width of the terminal", default=49, type=int)
 parser.add_argument("--term-height", help="Height of the terminal", default=8, type=int)
