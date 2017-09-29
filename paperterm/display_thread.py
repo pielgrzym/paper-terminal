@@ -97,25 +97,6 @@ class DisplayThread(threading.Thread):
 
         return (part, min_x, min_y)
 
-    def redraw_image(self):
-        self.epd.set_frame_memory(self.image.rotate(90, expand=1), 0, 0)
-        self.epd.display_frame()
-        self.epd.set_frame_memory(self.image.rotate(90, expand=1), 0, 0)
-        self.epd.display_frame()
-
-    def check_single_line_modified(self, input_list):
-        new_lines = set(input_list) - set(self.buffer)
-        if len(new_lines) == 1:
-            return input_list.index(new_lines.pop())
-        else:
-            return False
-
-    def check_prompt(self, line):
-        if 'pi@raspberrypi:' in line:
-            return True
-        else:
-            return False
-
     def print_lines(self, input_list):
         """
         Print list line-by-line
