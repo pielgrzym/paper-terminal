@@ -105,6 +105,8 @@ class DisplayThread(threading.Thread):
         self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
         self.draw = ImageDraw.Draw(self.image)
         self.draw.multiline_text((0, 0), "\n".join(input_list), font=self.font)
+        self.draw.rectangle((self.screen.cursor.x, self.screen.cursor.y, self.screen.cursor.x+12, self.screen.cursor.y+16),
+                fill=0)
         logging.debug("To be redrawed ...")
         try:
             (image_part, x, y) = self.redraw_image_part(image_old, self.image)
