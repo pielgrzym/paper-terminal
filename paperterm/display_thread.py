@@ -157,7 +157,7 @@ class DisplayThread(threading.Thread):
             except Exception, e:
                 #print(str(e))
                 pass
-            time.sleep(0.05) # omg, some callback or shit?
+            time.sleep(0.01) # omg, some callback or shit?
         self.clear_display()
 
     def echo(self, output):
