@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function, unicode_literals
 # import signal
-import pam
 from paperterm import *
 from logging.handlers import SysLogHandler
 import logging

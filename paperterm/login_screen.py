@@ -2,6 +2,7 @@ from getpass import getpass
 import os, sys, tty, termios
 import fcntl, pty
 import logging
+import pam
 
 class LoginScreen(object):
     def __init__(self, display_q):
