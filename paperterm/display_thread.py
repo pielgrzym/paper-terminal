@@ -34,6 +34,7 @@ class DisplayThread(threading.Thread):
         self.screen = pyte.Screen(self.size_x, self.size_y)
         self.stream = pyte.Stream(self.screen)
         self.buffer = []
+        self.cursor_disabled = False
 
     def clear_display(self):
         self.epd.clear_frame_memory(0xFF)
@@ -98,7 +99,7 @@ class DisplayThread(threading.Thread):
         return (part, min_x, min_y)
 
     def draw_cursor(self):
-        if not self.screen.cursor.hidden:
+        if not self.screen.cursor.hidden or not self.cursor_disabled:
             logging.debug("Drawing cursor: x: %d, y: %d [px: %d, py: %d]",
                     self.screen.cursor.x*6,
                     self.screen.cursor.y*16,

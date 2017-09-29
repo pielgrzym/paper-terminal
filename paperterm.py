@@ -44,8 +44,10 @@ def start():
     display_thread = DisplayThread(TERM_WIDTH, TERM_HEIGHT, display_q)
     display_thread.start()
 
+    display_thread.cursor_disabled = True
     login_screen = LoginScreen(display_q)
     login_screen.run()
+    display_thread.cursor_disabled = False
 
     if login_screen.authenticated:
         shell_thread = ShellThread(TERM_WIDTH, TERM_HEIGHT, login_screen.username, display_q)

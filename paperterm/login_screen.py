@@ -25,15 +25,20 @@ class LoginScreen(object):
             self.display_q.put("Login: ")
             print("Login: ")
             self.username = ""
+            ignore_counter = 0
             while True:
                 c = self.getchr()
                 logging.debug("[Login screen] Typed char: %s (ord: %d)" % (c, ord(c)))
+                if ignore_counter > 0:
+                    ignore_counter -= 1
+                    continue
                 if c == "\r":
                     self.display_q.put("\n\r")
                     break
-                elif ord(c) == 8: # backspace, delete one char
+                elif ord(c) == 127: # backspace, delete one char
                     self.username = self.username[:-1]
-                elif ord(c) in [13, 37, 38, 39, 40]: # delete or arrows
+                elif ord(c) 27: # arrows produce 3 chars, so we need to skip 3 inputs total
+                    ignore_counter = 2
                     continue
                 else:
                     self.username += c
