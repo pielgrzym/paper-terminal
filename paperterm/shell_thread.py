@@ -45,6 +45,16 @@ class ShellThread(threading.Thread):
         except AttributeError:
             fcntl.fcntl(fdescr, fcntl.F_SETFL, fdfl | os.FNDELAY)
 
+    def getchr():
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        self.write(ch)
+
     def start_shell(self):
         """
         Use excellent ptyprocess package to run a pty with a shell
