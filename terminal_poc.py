@@ -28,7 +28,7 @@ logger = logging.getLogger()
 if args.use_syslog:
     logger.addHandler(SysLogHandler('/dev/log'))
 else:
-    logger.addhandler(logging.FileHandler(args.log_file))
+    logger.addHandler(logging.FileHandler(args.log_file))
 
 logging.info("--------[ INIT ]--------")
 
