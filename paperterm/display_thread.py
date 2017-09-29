@@ -103,7 +103,7 @@ class DisplayThread(threading.Thread):
                     self.screen.cursor.x*6,
                     self.screen.cursor.y*16,
                     (self.screen.cursor.x+1)*6-2,
-                    (self.screen.cursor.y+1)*16-4),
+                    (self.screen.cursor.y+1)*16-4
                     )
             self.draw.rectangle((
                 self.screen.cursor.x*6,
