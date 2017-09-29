@@ -45,7 +45,7 @@ class ShellThread(threading.Thread):
         except AttributeError:
             fcntl.fcntl(fdescr, fcntl.F_SETFL, fdfl | os.FNDELAY)
 
-    def getchr():
+    def getchr(self):
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         try:

@@ -1,13 +1,15 @@
 from getpass import getpass
 import os, sys, tty, termios
 import fcntl, pty
+import logging
 
 class LoginScreen(object):
     def __init__(self, display_q):
         self.display_q = display_q
         self.display_q.put("Paper Terminal v0.1 login\n\r")
+        logging.debug("Started login screen")
 
-    def getchr():
+    def getchr(self):
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         try:
@@ -33,10 +35,12 @@ class LoginScreen(object):
             self.display_q.put("Password:\n\r")
             self.password = getpass("Password: ")
             if pam.authenticate(self.username, self.password):
+                logging.debug("Auth success for user: %s" % self.username)
                 self.password = None # such security! :D
                 self.authenticated = True
                 break
             else:
+                logging.debug("Auth FAIL for user: %s" % self.username)
                 self.authenticated = False
                 display_q.put("Wrong user/pass\n\r")
 
