@@ -4,6 +4,15 @@ from __future__ import print_function, unicode_literals
 import pam
 from getpass import getpass
 from paperterm import *
+import logging
+
+logging.basicConfig(
+    filename="debug.log",
+    level=logging.DEBUG,
+    format="%(asctime)s:%(levelname)s:%(module)sf:%(funcName)s: %(message)s"
+    )
+
+logging.info("--------[ INIT ]--------")
 
 # def signal_handler(signal, frame):
 #     PaperTerminal.KILLALL = True
