@@ -4,7 +4,7 @@ from __future__ import print_function, unicode_literals
 import pam
 from getpass import getpass
 from paperterm import *
-from logging.handlers import SysLogHandler
+from logging.handlers import SysLogHandler, FileHandler
 import logging
 import argparse
 
@@ -19,14 +19,16 @@ parser.add_argument("--use-syslog", help="Use syslog for logging", action="store
 args = parser.parse_args()
 
 logging.basicConfig(
-    filename=args.log_file,
     level=logging.DEBUG,
     format="%(asctime)s:%(levelname)s:%(module)sf:%(funcName)s: %(message)s"
     )
 
+logger = logging.getLogger()
+
 if args.use_syslog:
-    logger = logging.getLogger()
     logger.addHandler(SysLogHandler('/dev/log'))
+else:
+    logger.addhandler(FileHandler(args.log_file))
 
 logging.info("--------[ INIT ]--------")
 
