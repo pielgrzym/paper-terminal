@@ -37,6 +37,9 @@ class LoginScreen(object):
                     break
                 elif ord(c) == 127: # backspace, delete one char
                     self.username = self.username[:-1]
+                    # yes, to erase a char in terminal, one needs to do a
+                    # backspace a space and a backspace...
+                    c = "\b \b"
                 elif ord(c) == 27: # arrows produce 3 chars, so we need to skip 3 inputs total
                     ignore_counter = 2
                     continue
