@@ -37,7 +37,7 @@ class LoginScreen(object):
                     break
                 elif ord(c) == 127: # backspace, delete one char
                     self.username = self.username[:-1]
-                elif ord(c) 27: # arrows produce 3 chars, so we need to skip 3 inputs total
+                elif ord(c) == 27: # arrows produce 3 chars, so we need to skip 3 inputs total
                     ignore_counter = 2
                     continue
                 else:
