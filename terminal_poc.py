@@ -30,10 +30,7 @@ def getchr():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
 
-if __name__ == "__main__":
-
-    # signal.signal(signal.SIGINT, signal_handler)
-
+def main_main():
     display_q = Queue.Queue()
     display_thread = DisplayThread(TERM_WIDTH, TERM_HEIGHT, display_q)
     display_thread.start()
@@ -71,3 +68,19 @@ if __name__ == "__main__":
         shell_thread.write(r)
 
     display_thread.join()
+
+if __name__ == "__main__":
+    import logging
+    try:
+        import subprocess
+        subprocess.call(['loadkeys', '/home/pi/keys'])
+    except Exception as e:
+        with open('/tmp/log', 'w') as f:
+            f.write(str(e))
+    try:
+        main_main()
+    except Exception as e:
+        logging.exception("message")
+
+    # signal.signal(signal.SIGINT, signal_handler)
+
