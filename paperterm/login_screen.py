@@ -27,6 +27,7 @@ class LoginScreen(object):
             self.username = ""
             while True:
                 c = self.getchr()
+                logging.debug("[Login screen] Typed char: %s (ord: %d)", % c, ord(c))
                 if c == "\r":
                     self.display_q.put("\n\r")
                     break
