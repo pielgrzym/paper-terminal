@@ -5,20 +5,35 @@ import pam
 from getpass import getpass
 from paperterm import *
 import logging
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--no-loadkeys", help="Disable loadkeys being ran prior to shell")
+parser.add_argument("--loadkeys-config", help="Config file for key remapping", default='/home/pi/keys')
+parser.add_argument("--term-width", help="Width of the terminal", default=49, type=int)
+parser.add_argument("--term-height", help="Height of the terminal", default=8, type=int)
+parser.add_argument("--log-file", help="Location of logfile", default="debug.log")
+parser.add_argument("--use-syslog", help="Use syslog for logging", action="store_true")
+
+args = parser.parse_args()
 
 logging.basicConfig(
-    filename="debug.log",
+    filename=args.log_file,
     level=logging.DEBUG,
     format="%(asctime)s:%(levelname)s:%(module)sf:%(funcName)s: %(message)s"
     )
+
+if args.use_syslog:
+    logger = logging.getLogger()
+    logger.addHandler(SysLogHandler('/dev/log'))
 
 logging.info("--------[ INIT ]--------")
 
 # def signal_handler(signal, frame):
 #     PaperTerminal.KILLALL = True
 #     sys.exit(0)
-TERM_WIDTH=49
-TERM_HEIGHT=8
+TERM_WIDTH=args.term_width
+TERM_HEIGHT=args.term_height
 
 def getchr():
     fd = sys.stdin.fileno()
@@ -53,8 +68,6 @@ def main_main():
             else:
                 username += c
         display_q.put("Password:\n\r")
-        # print("Password: ")
-        # password = raw_input() # TODO: rnd how to prevent getpass delay
         password = getpass("Password: ")
         if pam.authenticate(username, password):
             shell_thread = ShellThread(TERM_WIDTH, TERM_HEIGHT, username, display_q)
@@ -71,12 +84,12 @@ def main_main():
 
 if __name__ == "__main__":
     import logging
-    try:
-        import subprocess
-        subprocess.call(['loadkeys', '/home/pi/keys'])
-    except Exception as e:
-        with open('/tmp/log', 'w') as f:
-            f.write(str(e))
+    if not args.no_loadkeys:
+        try:
+            import subprocess
+            subprocess.call(['loadkeys', args.loadkeys_config])
+        except Exception as e:
+            logging.exception("loadkeys error")
     try:
         main_main()
     except Exception as e:
