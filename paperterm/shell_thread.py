@@ -56,8 +56,13 @@ class ShellThread(threading.Thread):
         pw_record = pwd.getpwnam(self.user)
         uid = pw_record.pw_uid
         gid = pw_record.pw_gid
+        if pw_record.pw_shell is None:
+            pw_shell = '/bin/bash'
+        else:
+            pw_shell = pw_record.pw_shell
 
-        self.slave_process = ptyprocess.PtyProcessUnicode.spawn(['/bin/bash','-i'],
+        #self.slave_process = ptyprocess.PtyProcessUnicode.spawn(['/bin/bash','-i'],
+        self.slave_process = ptyprocess.PtyProcessUnicode.spawn([pw_shell,'-i'],
                 preexec_fn=prepare_subprocess(uid, gid),
                 dimensions=(self.size_y, self.size_x),
                 cwd=pw_record.pw_dir,
@@ -68,37 +73,37 @@ class ShellThread(threading.Thread):
                     USER=pw_record.pw_name
                     ))
 
-    def start_shell_subprocess(self):
-        """
-        Start subprocess with a shell and nonblocking io for communication
-        taken from:
-        https://stackoverflow.com/questions/12146230/
-        how-to-run-a-shell-in-a-separate-process-and-get-auto-completions-python
-        """
-        self.slave_io, self.slave = pty.openpty()
-        self.slave_io = os.fdopen(self.slave_io, 'rb+wb', 0) # open file in an unbuffered mode
-        self._make_non_blocking(self.slave_io)
-        pw_record = pwd.getpwnam(self.user)
-        uid = pw_record.pw_uid
-        gid = pw_record.pw_gid
-
-        self.slave_process = subprocess.Popen(shell=False, args=['/bin/bash', '-i'], stdin=self.slave,
-                stdout=self.slave, stderr=subprocess.STDOUT, preexec_fn=prepare_subprocess(uid, gid),
-                env=dict(TERM="linux",
-                    COLUMNS=str(self.size_x),
-                    LINES=str(self.size_y),
-                    HOME=pw_record.pw_dir,
-                    LOGNAME=pw_record.pw_name,
-                    PWD=pw_record.pw_dir,
-                    USER=pw_record.pw_name
-                    ))
+    # def start_shell_subprocess(self):
+    #     """
+    #     Start subprocess with a shell and nonblocking io for communication
+    #     taken from:
+    #     https://stackoverflow.com/questions/12146230/
+    #     how-to-run-a-shell-in-a-separate-process-and-get-auto-completions-python
+    #     """
+    #     self.slave_io, self.slave = pty.openpty()
+    #     self.slave_io = os.fdopen(self.slave_io, 'rb+wb', 0) # open file in an unbuffered mode
+    #     self._make_non_blocking(self.slave_io)
+    #     pw_record = pwd.getpwnam(self.user)
+    #     uid = pw_record.pw_uid
+    #     gid = pw_record.pw_gid
+    #
+    #     self.slave_process = subprocess.Popen(shell=False, args=['/bin/bash', '-i'], stdin=self.slave,
+    #             stdout=self.slave, stderr=subprocess.STDOUT, preexec_fn=prepare_subprocess(uid, gid),
+    #             env=dict(TERM="linux",
+    #                 COLUMNS=str(self.size_x),
+    #                 LINES=str(self.size_y),
+    #                 HOME=pw_record.pw_dir,
+    #                 LOGNAME=pw_record.pw_name,
+    #                 PWD=pw_record.pw_dir,
+    #                 USER=pw_record.pw_name
+    #                 ))
 
     def run(self):
         self.start_shell()
         while self.slave_process.isalive():
         # while self.slave_process.poll() is None:
             try:
-                output = self.slave_process.read()
+                output = self.slave_process.read(1)
                 # output = self.slave_io.read()
                 self.display_q.put(output)
             except Exception, e:
