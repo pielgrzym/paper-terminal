@@ -73,8 +73,6 @@ class DisplayThread(threading.Thread):
 
         part = new.crop((min_x, min_y, max_x, max_y))
 
-        part.show()
-
         return (part, min_x, min_y)
 
     def redraw_image(self):
