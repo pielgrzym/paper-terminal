@@ -4,6 +4,7 @@ from __future__ import print_function, unicode_literals
 import pam
 from getpass import getpass
 from paperterm import *
+from logging.handlers import SysLogHandler
 import logging
 import argparse
 
