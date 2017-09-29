@@ -93,7 +93,7 @@ class DisplayThread(threading.Thread):
                       min_x, max_x, min_y, max_y)
 
         part = new.crop((min_x, min_y, max_x, max_y))
-        self.draw_border(part)
+        # self.draw_border(part)
 
         return (part, min_x, min_y)
 
