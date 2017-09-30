@@ -41,8 +41,10 @@ TERM_HEIGHT=args.term_height
 def start():
     display_q = Queue.Queue()
 
+    logging.debug("Starting DisplayThread with dimensions: %s x %s" % (TERM_WIDTH, TERM_HEIGHT))
     display_thread = DisplayThread(TERM_WIDTH, TERM_HEIGHT, display_q)
     display_thread.start()
+    logging.debug("DisplayThread started sucessfully")
 
     display_thread.cursor_enabled = False
     login_screen = LoginScreen(display_q)
