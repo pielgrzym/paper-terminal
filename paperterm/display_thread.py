@@ -29,6 +29,7 @@ class DisplayThread(threading.Thread):
         #self.font = ImageFont.truetype('terminus.ttf', 12)
         self.draw = ImageDraw.Draw(self.image)
         self.clear_display()
+        self.clear_display()
         self.epd.init(self.epd.lut_partial_update)
 
         self.screen = pyte.Screen(self.size_x, self.size_y)
