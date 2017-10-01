@@ -114,7 +114,7 @@ class DisplayThread(threading.Thread):
                 (self.screen.cursor.y+1)*16-4),
                 fill=0)
 
-    def print_lines(self, input_list):
+    def draw_lines(self, input_list):
         """
         Print list line-by-line
         """
@@ -147,7 +147,7 @@ class DisplayThread(threading.Thread):
                 self.stream.feed(output)
         except Queue.Empty:
             if new_data:
-                self.print_lines(self.screen.display)
+                self.draw_lines(self.screen.display)
 
     def run(self):
         while not self.stoprequest.isSet():
@@ -161,7 +161,7 @@ class DisplayThread(threading.Thread):
 
     def echo(self, output):
         self.stream.feed(output)
-        self.print_lines(self.screen.display)
+        self.draw_lines(self.screen.display)
 
     def join(self, timeout=None):
         self.stoprequest.set()
