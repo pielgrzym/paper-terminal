@@ -113,7 +113,7 @@ class ShellThread(threading.Thread):
         while self.slave_process.isalive():
         # while self.slave_process.poll() is None:
             try:
-                output = self.slave_process.read(1)
+                output = self.slave_process.read()
                 # output = self.slave_io.read()
                 self.display_q.put(output)
             except Exception, e:

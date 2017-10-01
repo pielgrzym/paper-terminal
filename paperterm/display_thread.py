@@ -121,7 +121,7 @@ class DisplayThread(threading.Thread):
         image_old = self.image.copy()
         self.image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)
         self.draw = ImageDraw.Draw(self.image)
-        self.draw.multiline_text((0, 0), "\n".join(input_list), font=self.font)
+        self.draw.multiline_text((0, 0), "\n".join(input_list).encode("utf-8"), font=self.font)
         self.draw_cursor()
         logging.debug("To be redrawed ...")
         try:
@@ -155,8 +155,8 @@ class DisplayThread(threading.Thread):
                 self.refresh_screen()
             except Exception, e:
                 #print(str(e))
-                pass
-            time.sleep(0.01) # omg, some callback or shit?
+                logging.exception("display thread exception")
+            time.sleep(0.03) # omg, some callback or shit?
         self.clear_display()
 
     def echo(self, output):
